@@ -1,12 +1,13 @@
 import { computeMerkleRoot } from "./lib/merkle-tree";
 import { useCallback, useState } from "react";
-import { cn } from "./lib/utils";
+import { cn, readFile } from "./lib/utils";
 import { useDropzone } from "react-dropzone";
 import wakeupPowered from "./assets/wakeup-powered.svg";
 import type {
   GasRefundMerkleTree,
   RewardsMerkleTree,
 } from "./types/merkle-tree";
+import { toast } from "sonner";
 
 export default function App() {
   const [computedMerkleRoot, setComputedMerkleRoot] = useState<string | null>(
@@ -17,53 +18,50 @@ export default function App() {
   );
   const [filename, setFilename] = useState<string | null>(null);
 
-  const onFileChange = useCallback((files: File[]) => {
+  const onFileChange = useCallback(async (files: File[]) => {
     try {
-      const file = files[0];
+      const fileContent = await readFile(files[0]);
 
-      const fileReader = new FileReader();
-      fileReader.onload = async (event) => {
-        const fileContent = event.target?.result as string;
-        const parsedContent = JSON.parse(fileContent) as
-          | RewardsMerkleTree
-          | GasRefundMerkleTree;
+      const parsedContent = JSON.parse(fileContent) as
+        | RewardsMerkleTree
+        | GasRefundMerkleTree;
 
-        const merkleRoot =
-          "merkleRoot" in parsedContent
-            ? parsedContent.merkleRoot
-            : parsedContent.root.merkleRoot;
+      const merkleRoot =
+        "merkleRoot" in parsedContent
+          ? parsedContent.merkleRoot
+          : parsedContent.root.merkleRoot;
 
-        const proofs = (
-          "proofs" in parsedContent ? parsedContent.proofs : []
-        ).map((p) => {
-          const amount =
-            "cumulativeClaimableAmount" in p
-              ? p.cumulativeClaimableAmount
-              : p.amount;
-          if (amount === undefined) {
-            throw new Error("Invalid file");
-          }
-
-          const account = "account" in p ? p.account : p.user;
-          if (account === undefined) {
-            throw new Error("Invalid file");
-          }
-
-          return { account, amount };
-        });
-
-        if (merkleRoot === undefined || proofs === undefined) {
+      const proofs = (
+        "proofs" in parsedContent ? parsedContent.proofs : []
+      ).map((p) => {
+        const amount =
+          "cumulativeClaimableAmount" in p
+            ? p.cumulativeClaimableAmount
+            : p.amount;
+        if (amount === undefined) {
           throw new Error("Invalid file");
         }
 
-        setFilename(file.name);
-        setExpectedMerkleRoot(merkleRoot);
-        setComputedMerkleRoot(computeMerkleRoot(proofs));
-      };
-      fileReader.readAsText(file);
+        const account = "account" in p ? p.account : p.user;
+        if (account === undefined) {
+          throw new Error("Invalid file");
+        }
+
+        return { account, amount };
+      });
+
+      if (merkleRoot === undefined || proofs === undefined) {
+        throw new Error("Invalid file");
+      }
+
+      setFilename(files[0].name);
+      setExpectedMerkleRoot(merkleRoot);
+      setComputedMerkleRoot(computeMerkleRoot(proofs));
     } catch (e) {
-      console.error(e);
-      alert("Invalid file");
+      toast.error("Invalid file", {
+        description:
+          "File must match `merkledata-chain-....json` schema for rewards or gas refunds",
+      });
     }
   }, []);
 
@@ -105,9 +103,9 @@ export default function App() {
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 className="lucide lucide-x-icon lucide-x"
               >
                 <path d="M18 6 6 18" />
@@ -132,9 +130,9 @@ export default function App() {
               >
                 <path
                   stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
                   d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                 />
               </svg>
@@ -181,7 +179,11 @@ export default function App() {
         className="fixed right-0 top-0"
         aria-label="View source on Github"
       >
-        <svg viewBox="0 0 250 250" aria-hidden="true" className="fill-[#42b983] h-20 w-20">
+        <svg
+          viewBox="0 0 250 250"
+          aria-hidden="true"
+          className="fill-[#42b983] h-20 w-20"
+        >
           <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
           <path
             d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
