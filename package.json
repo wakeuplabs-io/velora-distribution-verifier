@@ -1,9 +1,10 @@
 {
-  "name": "paraswap-script",
+  "name": "velora-distribution-verifier",
   "version": "1.0.0",
-  "description": "Paraswap scripts is a collection of scripts to calculate rewards and refunds for Paraswap stakers.",
+  "description": "Velora Distribution Verifier helps users to validate the merkle roots proposed for the rewards and refunds distributions.",
   "main": "index.js",
   "scripts": {
+    "start": "npm run dev --workspace packages/ui",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "workspaces": [
@@ -11,20 +12,18 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wakeuplabs-io/paraswap-script.git"
+    "url": "git+https://github.com/wakeuplabs-io/velora-distribution-verifier.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/wakeuplabs-io/paraswap-script/issues"
+    "url": "https://github.com/wakeuplabs-io/velora-distribution-verifier/issues"
   },
-  "homepage": "https://github.com/wakeuplabs-io/paraswap-script#readme",
+  "homepage": "https://github.com/wakeuplabs-io/velora-distribution-verifier#readme",
   "devDependencies": {
-    "@types/aws-lambda": "8.10.149",
-    "@types/node": "^22.15.15",
-    "vite-plugin-node-polyfills": "^0.23.0"
+    "@types/node": "^22.15.15"
   },
   "dependencies": {
     "sst": "3.14.11"
