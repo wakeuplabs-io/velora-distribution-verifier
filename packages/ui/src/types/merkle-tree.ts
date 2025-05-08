@@ -8,6 +8,7 @@ export type GasRefundMerkleTree = {
   proofs: {
     user: `0x${string}`;
     amount: string;
+    merkleProofs: string[];
   }[];
 }
   
@@ -17,6 +18,7 @@ export type RewardsMerkleTree = {
   proofs: {
     account: `0x${string}`;
     cumulativeClaimableAmount: string;
+    merkleProofs: string[];
   }[];
 }
   
