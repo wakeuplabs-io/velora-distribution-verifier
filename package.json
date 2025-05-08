@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run dev --workspace packages/ui",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run test --ws",
+    "build": "npm run build --ws"
   },
   "workspaces": [
     "packages/*"

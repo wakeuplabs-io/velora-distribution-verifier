@@ -61,6 +61,15 @@ export const ClaimSearch: React.FC<{
             <div className="font-medium text-sm">Proof</div>
             <div>{proof.proof.path.join(", ")}</div>
           </div>
+          <div className="p-4 text-center space-y-1">
+            <div className=" font-medium text-sm">
+              Input details at{" "}
+              <a href="https://eth-sepolia.blockscout.com/address/0xEca298c34670898F5E06c2856658e096675099E3?tab=read_contract#0x3c8c6cc1" target="_blank" className="underline">
+                etherscan
+              </a>{" "}
+              to double check
+            </div>
+          </div>
         </div>
       ) : (
         <div className="bg-gray-50 rounded-lg border border-gray-300 w-full divide-y divide-gray-300">
