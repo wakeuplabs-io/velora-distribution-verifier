@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "hardhat test"
+    "test": "hardhat test",
+    "deploy": "hardhat ignition deploy ./ignition/modules/MerkleTreeStore.ts --network sepolia --verify --include-unrelated-contracts"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +17,7 @@
   },
   "dependencies": {
     "@openzeppelin/contracts": "^5.3.0",
+    "dotenv": "^16.5.0",
     "merkletreejs": "^0.5.2",
     "viem": "^2.29.1"
   }
