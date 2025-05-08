@@ -1,0 +1,32 @@
+{
+  "name": "paraswap-script",
+  "version": "1.0.0",
+  "description": "Paraswap scripts is a collection of scripts to calculate rewards and refunds for Paraswap stakers.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wakeuplabs-io/paraswap-script.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/wakeuplabs-io/paraswap-script/issues"
+  },
+  "homepage": "https://github.com/wakeuplabs-io/paraswap-script#readme",
+  "devDependencies": {
+    "@types/aws-lambda": "8.10.149",
+    "@types/node": "^22.15.15",
+    "vite-plugin-node-polyfills": "^0.23.0"
+  },
+  "dependencies": {
+    "sst": "3.14.11"
+  }
+}

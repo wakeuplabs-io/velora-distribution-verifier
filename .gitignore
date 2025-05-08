@@ -1,0 +1,18 @@
+node_modules
+dist
+
+.env
+.env.development
+.env.sample!
+
+/packages/staking-calculation/input
+/packages/staking-calculation/output
+/packages/staking-calculation/expected-data
+/packages/staking-calculation/cache
+/packages/staking-calculation/comparison
+
+packages/db-dumps/dumps
+.vscode/settings.json
+
+# sst
+.sst
