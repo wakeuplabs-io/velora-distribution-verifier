@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "hardhat test",
-    "deploy": "hardhat ignition deploy ./ignition/modules/MerkleTreeStore.ts --network sepolia --verify --include-unrelated-contracts"
+    "deploy": "hardhat ignition deploy ./ignition/modules/MerkleTreeStore.ts --network sepolia --verify --include-unrelated-contracts",
+    "build": "hardhat compile"
   },
   "keywords": [],
   "author": "",
