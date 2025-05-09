@@ -10,7 +10,7 @@ export const ClaimSearch: React.FC<{
   const [search, setSearch] = useState<string>("");
 
   const proof = useMemo(() => {
-    const proof = proofs.find((p) => p.account === search);
+    const proof = proofs.find((p) => p.account.toLowerCase() === search.toLowerCase());
     if (proof === undefined) {
       return undefined;
     }
