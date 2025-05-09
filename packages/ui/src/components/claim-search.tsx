@@ -41,33 +41,52 @@ export const ClaimSearch: React.FC<{
       />
 
       {proof ? (
-        <div
-          className={cn(
-            "flex flex-col w-full border divide-y border-gray-300 rounded-lg bg-gray-50 overflow-scroll mt-2",
-            proof.isValid
-              ? "bg-green-50 border-green-300 divide-green-300"
-              : "bg-red-50 border-red-300 divide-red-300"
-          )}
-        >
-          <div className="p-4 text-center space-y-1">
-            <div className="font-medium text-sm">Claimable amount</div>
-            <div>{proof.proof.amount}</div>
+        <div>
+          <div
+            className={cn(
+              "flex flex-col w-full border divide-y border-gray-300 rounded-lg bg-gray-50 overflow-scroll mt-2",
+              proof.isValid
+                ? "bg-green-50 border-green-300 divide-green-300"
+                : "bg-red-50 border-red-300 divide-red-300"
+            )}
+          >
+            <div className="p-4 text-center space-y-1">
+              <div className="font-medium text-sm">
+                Claimable amount in file
+              </div>
+              <div>{proof.proof.amount}</div>
+            </div>
+            <div className="p-4 text-center space-y-1">
+              <div className="font-medium text-sm">Root in file</div>
+              <div>{root}</div>
+            </div>
+            <div className="p-4 text-center space-y-1">
+              <div className="font-medium text-sm">Proof in file</div>
+              <div>{proof.proof.path.join(", ")}</div>
+            </div>
+            <div className="p-4 text-center space-y-1">
+              <div className=" font-medium text-sm">
+                Input details at{" "}
+                <a
+                  href="https://eth-sepolia.blockscout.com/address/0xEca298c34670898F5E06c2856658e096675099E3?tab=read_contract#0x3c8c6cc1"
+                  target="_blank"
+                  className="underline"
+                >
+                  etherscan
+                </a>{" "}
+                to double check
+              </div>
+            </div>
           </div>
+
           <div className="p-4 text-center space-y-1">
-            <div className="font-medium text-sm">Root</div>
-            <div>{root}</div>
-          </div>
-          <div className="p-4 text-center space-y-1">
-            <div className="font-medium text-sm">Proof</div>
-            <div>{proof.proof.path.join(", ")}</div>
-          </div>
-          <div className="p-4 text-center space-y-1">
-            <div className=" font-medium text-sm">
-              Input details at{" "}
-              <a href="https://eth-sepolia.blockscout.com/address/0xEca298c34670898F5E06c2856658e096675099E3?tab=read_contract#0x3c8c6cc1" target="_blank" className="underline">
-                etherscan
-              </a>{" "}
-              to double check
+            <div
+              className={cn(
+                "font-medium text-sm",
+                proof.isValid ? "text-green-500" : "text-red-500"
+              )}
+            >
+              {proof.isValid ? "Proof is valid ✅" : "Proof is invalid ❌"}
             </div>
           </div>
         </div>
