@@ -31,7 +31,10 @@ export default $config({
         command: "npm run build",
         output: "dist",
       },
-      domain: "velora-verifier.wakeuplabs.link",
+      domain: {
+        name: "velora-verifier.wakeuplabs.io",
+        aliases: ["velora-verifier.wakeuplabs.link"],
+      }
     });
 
     return {
