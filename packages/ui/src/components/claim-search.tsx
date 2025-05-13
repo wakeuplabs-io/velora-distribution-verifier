@@ -1,16 +1,26 @@
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { cn } from "@/lib/utils";
 import MerkleTree from "merkletreejs";
 import { useMemo, useState } from "react";
-import { encodePacked, keccak256 } from "viem";
+import { encodePacked, formatEther, keccak256 } from "viem";
 
 export const ClaimSearch: React.FC<{
   root: string;
-  proofs: { account: `0x${string}`; amount: string; path: string[] }[];
-}> = ({ root, proofs }) => {
+  token: string;
+  proofs: {
+    account: `0x${string}`;
+    amount: string;
+    epochAmount: string;
+    path: string[];
+  }[];
+}> = ({ root, proofs, token }) => {
   const [search, setSearch] = useState<string>("");
+  const { copyToClipboard, isCopied } = useCopyToClipboard({ timeout: 2000 });
 
   const proof = useMemo(() => {
-    const proof = proofs.find((p) => p.account.toLowerCase() === search.toLowerCase());
+    const proof = proofs.find(
+      (p) => p.account.toLowerCase() === search.toLowerCase()
+    );
     if (proof === undefined) {
       return undefined;
     }
@@ -41,30 +51,59 @@ export const ClaimSearch: React.FC<{
       />
 
       {proof ? (
-        <div>
+        <div className="w-full">
           <div
             className={cn(
-              "flex flex-col w-full border divide-y border-gray-300 rounded-lg bg-gray-50 overflow-scroll mt-2",
+              "flex flex-col w-full border divide-y border-gray-300 rounded-lg bg-gray-50 mt-2",
               proof.isValid
                 ? "bg-green-50 border-green-300 divide-green-300"
                 : "bg-red-50 border-red-300 divide-red-300"
             )}
           >
-            <div className="p-4 text-center space-y-1">
+            <div className="p-4 text-center space-y-1 overflow-x-scroll">
               <div className="font-medium text-sm">
                 Claimable amount in file
               </div>
-              <div>{proof.proof.amount}</div>
+              <div className="flex flex-col md:flex-row justify-center items-center gap-1">
+                <div>{proof.proof.amount} Wei </div>
+                <div className="text-muted-foreground">
+                  ({formatEther(BigInt(proof.proof.amount))} {token})
+                </div>
+              </div>
             </div>
-            <div className="p-4 text-center space-y-1">
+
+            <div className="p-4 text-center space-y-1 overflow-scroll">
+              <div className="font-medium text-sm">Earned this epoch</div>
+
+              <div className="flex flex-col md:flex-row justify-center items-center gap-1">
+                <div>{proof.proof.epochAmount} Wei </div>
+                <div className="text-muted-foreground">
+                  ({formatEther(BigInt(proof.proof.epochAmount))} {token})
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 text-center space-y-1 overflow-scroll">
               <div className="font-medium text-sm">Root in file</div>
               <div>{root}</div>
             </div>
-            <div className="p-4 text-center space-y-1">
+
+            <div className="p-4 text-center space-y-1 overflow-scroll">
               <div className="font-medium text-sm">Proof in file</div>
               <div>{proof.proof.path.join(", ")}</div>
+              <button
+                onClick={() =>
+                  copyToClipboard(
+                    `[${proof.proof.path.map((p) => `"${p}"`).join(",")}]`
+                  )
+                }
+                className="text-xs cursor-pointer"
+              >
+                {isCopied ? "Copied" : "Copy to clipboard"}
+              </button>
             </div>
-            <div className="p-4 text-center space-y-1">
+
+            <div className="p-4 text-center space-y-1 overflow-scroll">
               <div className=" font-medium text-sm">
                 Input details at{" "}
                 <a

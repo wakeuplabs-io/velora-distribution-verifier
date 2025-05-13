@@ -15,11 +15,16 @@ import { ClaimSearch } from "./components/claim-search";
 
 export default function App() {
   const [root, setRoot] = useState<string>();
-  const [proofs, setProofs] =
-    useState<
-      { account: `0x${string}`; amount: string; path: string[] }[]
-    >();
+  const [proofs, setProofs] = useState<
+    {
+      account: `0x${string}`;
+      amount: string;
+      epochAmount: string;
+      path: string[];
+    }[]
+  >();
   const [filename, setFilename] = useState<string>();
+  const [claimToken, setClaimToken] = useState<string>();
 
   const onFileChange = useCallback(async (files: File[]) => {
     try {
@@ -29,10 +34,10 @@ export default function App() {
         | RewardsMerkleTree
         | GasRefundMerkleTree;
 
-      const merkleRoot =
-        "merkleRoot" in parsedContent
-          ? parsedContent.merkleRoot
-          : parsedContent.root.merkleRoot;
+      const isRewards = "merkleRoot" in parsedContent;
+      const merkleRoot = isRewards
+        ? parsedContent.merkleRoot
+        : parsedContent.root.merkleRoot;
 
       const proofs = (
         "proofs" in parsedContent ? parsedContent.proofs : []
@@ -45,6 +50,11 @@ export default function App() {
           throw new Error("Invalid file");
         }
 
+        const epochAmount = p.amount;
+        if (epochAmount === undefined) {
+          throw new Error("Invalid file");
+        }
+
         const account = "account" in p ? p.account : p.user;
         if (account === undefined) {
           throw new Error("Invalid file");
@@ -53,6 +63,7 @@ export default function App() {
         return {
           account: account as `0x${string}`,
           amount,
+          epochAmount,
           path: p.merkleProofs,
         };
       });
@@ -64,6 +75,7 @@ export default function App() {
       setRoot(merkleRoot);
       setProofs(proofs);
       setFilename(files[0].name);
+      setClaimToken(isRewards ? "ETH" : "PSP");
     } catch (e) {
       toast.error("Invalid file", {
         description:
@@ -74,12 +86,13 @@ export default function App() {
 
   const onReset = useCallback(() => {
     setFilename(undefined);
+    setClaimToken(undefined);
     setRoot(undefined);
     setProofs(undefined);
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen max-w-2xl mx-auto gap-8 py-10 px-4">
+    <div className="flex flex-col items-center justify-center min-h-screen max-w-2xl mx-auto gap-8 py-10 px-4">
       <div className="flex flex-col items-center justify-center gap-2">
         <h1 className="text-2xl font-bold">Velora Rewards/Refunds Verifier</h1>
         <p className="text-sm max-w-lg text-center">
@@ -102,7 +115,7 @@ export default function App() {
               <RootsDiff expectedRoot={root!} proofs={proofs!} />
             </TabsContent>
             <TabsContent value="account">
-              <ClaimSearch root={root!} proofs={proofs!} />
+              <ClaimSearch root={root!} proofs={proofs!} token={claimToken!} />
             </TabsContent>
           </Tabs>
         )}
