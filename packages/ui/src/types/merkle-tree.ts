@@ -18,6 +18,7 @@ export type RewardsMerkleTree = {
   proofs: {
     account: `0x${string}`;
     cumulativeClaimableAmount: string;
+    amount: string;
     merkleProofs: string[];
   }[];
 }
