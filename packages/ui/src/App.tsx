@@ -35,6 +35,7 @@ export default function App() {
         | GasRefundMerkleTree;
 
       const isRewards = "merkleRoot" in parsedContent;
+
       const merkleRoot = isRewards
         ? parsedContent.merkleRoot
         : parsedContent.root.merkleRoot;
@@ -50,7 +51,7 @@ export default function App() {
           throw new Error("Invalid file");
         }
 
-        const epochAmount = p.amount;
+        const epochAmount = "claimableAmount" in p ? p.claimableAmount : p.amount;
         if (epochAmount === undefined) {
           throw new Error("Invalid file");
         }
@@ -68,7 +69,7 @@ export default function App() {
         };
       });
 
-      if (merkleRoot === undefined || proofs === undefined) {
+      if (!merkleRoot || !proofs) {
         throw new Error("Invalid file");
       }
 
